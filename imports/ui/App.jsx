@@ -2,11 +2,15 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import { default as FaSpinner } from "react-icons/lib/fa/spinner";
 
 import { Tasks } from '../api/tasks.js';
 
 import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+import CustomGoogleMap from './GoogleMap.jsx';
+
+const markers = [];
 
 // App component - represents the whole app
 class App extends Component {
@@ -85,17 +89,19 @@ class App extends Component {
 
         </header>
 
-        <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-          <input
-            type="text"
-            ref="textInput"
-            placeholder="Type to add new tasks"
-          />
-        </form>
+        <CustomGoogleMap
+          containerElement={
+            <div style={{ height: `100%` }} />
+          }
+          mapElement={
+            <div style={{ height: `100%` }} />
+          }
+          onMapLoad={_.noop}
+          onMapClick={_.noop}
+          markers={markers}
+          onMarkerRightClick={_.noop}
+        />
 
-        <ul>
-          {this.renderTasks()}
-        </ul>
       </div>
     );
   }
