@@ -14,5 +14,9 @@
     "react-dom": "^15.6.1",
     "react-google-maps": "^7.1.0",
     "react-icons": "^2.2.5"
+  },
+  "devDependencies": {
+    "babel-install": "2.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1"
   }
 }

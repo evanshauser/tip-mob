@@ -8,7 +8,7 @@ import { Tasks } from '../api/tasks.js';
 
 import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
-import CustomGoogleMap from './GoogleMap.jsx';
+import GettingStartedExample from './GoogleMap.jsx';
 
 // App component - represents the whole app
 class App extends Component {
@@ -87,7 +87,7 @@ class App extends Component {
 
         </header>
 
-        <CustomGoogleMap />
+        <GettingStartedExample />
 
       </div>
     );

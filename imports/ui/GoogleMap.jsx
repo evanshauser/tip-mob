@@ -1,8 +1,6 @@
-import React from 'react';
+import {default as React, Component,} from 'react';
 import withScriptjs from "react-google-maps/lib/async/withScriptjs";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-
-const googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.27&libraries=places,geometry&key=GOOGLE_API_KEY"
 
 const markers = [];
 
@@ -11,8 +9,8 @@ const markers = [];
 const CustomGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
-    defaultZoom={3}
-    defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
+    defaultZoom={20}
+    defaultCenter={{ lat: 40.4419322, lng: -79.9418666 }}
     onClick={props.onMapClick}
   >
     {props.markers.map((marker, index) => (
@@ -24,17 +22,60 @@ const CustomGoogleMap = withGoogleMap(props => (
   </GoogleMap>
 ));
 
-export default () => (
-  <CustomGoogleMap
-    containerElement={
-      <div style={{ height: `80vh` }} />
+export default class GettingStartedExample extends Component {
+  constructor() {
+    super()
+    this.state = {
+      markers: [{
+        position: {
+          lat: 40.4419322,
+          lng: -79.9418666,
+        },
+        key: 'Maggie Mo',
+        defaultAnimation: 2,
+      }],
     }
-    mapElement={
-      <div style={{ height: `100%` }} />
+    this.handleMapClick = this.handleMapClick.bind(this)
+    this.handleMapLoad = this.handleMapLoad.bind(this)
+  }
+
+
+  handleMapClick(event) {
+    const nextMarkers = [
+      ...this.state.markers,
+      {
+        position: event.latLng,
+        defaultAnimation: 2,
+        key: Date.now(),
+      } ,
+    ];
+
+    this.setState({
+      markers: nextMarkers,
+    });
+  }
+
+  handleMapLoad(map) {
+    this._mapComponent = map;
+    if (map) {
+      console.log(map.getZoom());
     }
-    onMapLoad={_.noop}
-    onMapClick={_.noop}
-    markers={markers}
-    onMarkerRightClick={_.noop}
-  />
-);
+  }
+
+  render() {
+    return (
+      <CustomGoogleMap
+        containerElement={
+          <div style={{ height: `80vh` }} />
+        }
+        mapElement={
+          <div style={{ height: `100%` }} />
+        }
+        onMapLoad={this.handleMapLoad}
+        onMapClick={this.handleMapClick}
+        markers={this.state.markers}
+        onMarkerRightClick={_.noop}
+      />
+    );
+  }
+}
