@@ -1,8 +1,8 @@
-import {default as React, Component,} from 'react';
+import {default as React, Component, PropTypes } from 'react';
 import withScriptjs from "react-google-maps/lib/async/withScriptjs";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-
-const markers = [];
+import { createContainer } from 'meteor/react-meteor-data';
+import { Markers } from '../api/tasks.js';
 
 // Wrap all `react-google-maps` components with `withGoogleMap` HOC
 // and name it GettingStartedGoogleMap
@@ -16,49 +16,41 @@ const CustomGoogleMap = withGoogleMap(props => (
     {props.markers.map((marker, index) => (
       <Marker
         {...marker}
-        onRightClick={() => props.onMarkerRightClick(index)}
+        key={index}
+        onRightClick={() => props.onMarkerRightClick(marker._id)}
       />
     ))}
   </GoogleMap>
 ));
 
-export default class GettingStartedExample extends Component {
-  constructor() {
-    super()
-    this.state = {
-      markers: [{
-        position: {
-          lat: 40.4419322,
-          lng: -79.9418666,
-        },
-        key: 'Maggie Mo',
-        defaultAnimation: 2,
-      }],
-    }
-    this.handleMapClick = this.handleMapClick.bind(this)
-    this.handleMapLoad = this.handleMapLoad.bind(this)
+export class InteractiveMap extends Component {
+  constructor(props) {
+    super(props);
+    this.handleMapClick = this.handleMapClick.bind(this);
+    this.handleMarkerRightClick = this.handleMarkerRightClick.bind(this);
+    this.handleMapLoad = this.handleMapLoad.bind(this);
+    console.log(props.markers);
   }
 
-
   handleMapClick(event) {
-    const nextMarkers = [
-      ...this.state.markers,
-      {
-        position: event.latLng,
-        defaultAnimation: 2,
-        key: Date.now(),
-      } ,
-    ];
-
-    this.setState({
-      markers: nextMarkers,
+    Meteor.call('markers.insert', {
+      position: {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
+      },
+      defaultAnimation: 2,
+      key: Date.now(),
     });
+  }
+
+  handleMarkerRightClick(markerId) {
+    Meteor.call('markers.remove', markerId);
   }
 
   handleMapLoad(map) {
     this._mapComponent = map;
     if (map) {
-      console.log(map.getZoom());
+      // console.log(map.getZoom());
     }
   }
 
@@ -73,9 +65,24 @@ export default class GettingStartedExample extends Component {
         }
         onMapLoad={this.handleMapLoad}
         onMapClick={this.handleMapClick}
-        markers={this.state.markers}
-        onMarkerRightClick={_.noop}
+        markers={this.props.markers}
+        onMarkerRightClick={this.handleMarkerRightClick}
+
       />
     );
   }
 }
+
+InteractiveMap.propTypes = {
+  markers: PropTypes.array.isRequired,
+  currentUser: PropTypes.object,
+};
+
+export default createContainer(() => {
+  Meteor.subscribe('markers');
+
+  return {
+    currentUser: Meteor.user(),
+    markers: Markers.find({}).fetch(),
+  };
+}, InteractiveMap );
