@@ -25,4 +25,10 @@ Meteor.methods({
 
     Markers.remove(markerId);
   },
+  'markers.newDescription'(markerId, description) {
+    check(markerId, String);
+    check(description, String);
+
+    Markers.update(markerId, { $set: { description } });
+  }
 });
