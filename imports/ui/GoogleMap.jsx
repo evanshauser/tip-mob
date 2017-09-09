@@ -4,9 +4,11 @@ import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 
 const googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.27&libraries=places,geometry&key=GOOGLE_API_KEY"
 
+const markers = [];
+
 // Wrap all `react-google-maps` components with `withGoogleMap` HOC
 // and name it GettingStartedGoogleMap
-export default withScriptjs(withGoogleMap(props => (
+const CustomGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
     defaultZoom={3}
@@ -20,4 +22,19 @@ export default withScriptjs(withGoogleMap(props => (
       />
     ))}
   </GoogleMap>
-)));
+));
+
+export default () => (
+  <CustomGoogleMap
+    containerElement={
+      <div style={{ height: `80vh` }} />
+    }
+    mapElement={
+      <div style={{ height: `100%` }} />
+    }
+    onMapLoad={_.noop}
+    onMapClick={_.noop}
+    markers={markers}
+    onMarkerRightClick={_.noop}
+  />
+);

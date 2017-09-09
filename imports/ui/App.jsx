@@ -10,8 +10,6 @@ import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import CustomGoogleMap from './GoogleMap.jsx';
 
-const markers = [];
-
 // App component - represents the whole app
 class App extends Component {
   constructor(props) {
@@ -89,18 +87,7 @@ class App extends Component {
 
         </header>
 
-        <CustomGoogleMap
-          containerElement={
-            <div style={{ height: `100%` }} />
-          }
-          mapElement={
-            <div style={{ height: `100%` }} />
-          }
-          onMapLoad={_.noop}
-          onMapClick={_.noop}
-          markers={markers}
-          onMarkerRightClick={_.noop}
-        />
+        <CustomGoogleMap />
 
       </div>
     );
