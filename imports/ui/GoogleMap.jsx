@@ -30,24 +30,26 @@ const CustomGoogleMap = withGoogleMap(props => (
     onClick={props.onMapClick}
     onRightClick={props.onRightClick}
   >
-    <OverlayView
-      position={props.overlayPosition}
-      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-      getPixelPositionOffset={getPixelPositionOffset}
-    >
-        <div style={STYLES.overlayView}>
-          <h1>OverlayView </h1>
-          <button onClick={_.noop}>
-            Event
-          </button>
-          <button onClick={_.noop}>
-            Tip
-          </button>
-          <button onClick={_.noop}>
-            Directions?
-          </button>
-        </div>
-    </OverlayView>
+    {(props.overlayPosition != null) ? 
+      <OverlayView
+        position={props.overlayPosition}
+        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+        getPixelPositionOffset={getPixelPositionOffset}
+      >
+          <div style={STYLES.overlayView}>
+            <h1>OverlayView </h1>
+            <button onClick={_.noop}>
+              Event
+            </button>
+            <button onClick={_.noop}>
+              Tip
+            </button>
+            <button onClick={_.noop}>
+              Directions?
+            </button>
+          </div>
+      </OverlayView>
+      : ''}
     {props.markers.map((marker, index) => (
       <Marker
         {...marker}
@@ -70,9 +72,7 @@ export default class GettingStartedExample extends Component {
         defaultAnimation: 2,
       }],
 
-      overlayPosition: {
-        lat: 40.4419322,
-        lng: -79.9418666,}
+      overlayPosition: null
     };
     this.handleMapClick = this.handleMapClick.bind(this)
     this.handleMapLoad = this.handleMapLoad.bind(this)
@@ -103,9 +103,15 @@ export default class GettingStartedExample extends Component {
   }
 
   handleRightClick(event) {
-    this.setState({
-      overlayPosition: event.latLng,
-    });
+    if (this.overlayPosition != null) {
+      this.setState({
+        overlayPosition: null
+      });
+    } else {
+      this.setState({
+        overlayPosition: event.latLng,
+      });
+    }
   }
 
 
